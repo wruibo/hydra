@@ -1,7 +1,7 @@
 import bee
 
 
-class ListSpider(bee.Spider):
+class ListSpider(bee.HttpSpider):
     """
         get the stock list
     """
@@ -28,7 +28,8 @@ class ListSpider(bee.Spider):
         :param resp:
         :return:
         """
-        pass
+        print(resp)
+        print(resp.text)
 
 
 if __name__ == "__main__":

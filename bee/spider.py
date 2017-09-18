@@ -1,20 +1,30 @@
 """
     spider base class
 """
-import threading
-from . import job
+import time, threading
 
 
-class _SpiderThread(threading.Thread):
+class Config:
+    """
+        configure of spider
+    """
+    def __init__(self):
+        self.interval = 0
+
+
+class Spider(threading.Thread):
     def __init__(self):
         # spider tasks
         self._tasks = []
 
         # stop command for spider
-        self._stop = True
+        self._bstop = True
 
         # stop status for spider
         self._stopped = True
+
+        # configure for spider
+        self._config = Config()
 
         # initialize thread
         threading.Thread.__init__(self)
@@ -29,10 +39,34 @@ class _SpiderThread(threading.Thread):
             return
 
         # reset the stop flag to start spider thread
-        self._stop = False
+        self._bstop = False
 
         # start the spider thread
         threading.Thread.start(self)
+
+    def prepare(self):
+        """
+            initialize the spider, relate with @destroy.
+        subclass need realize this method
+        :return:
+        """
+        pass
+
+    def process(self, resp):
+        """
+
+        :param resp:
+        :return:
+        """
+        pass
+
+    def limit_interval(self, interval):
+        """
+
+        :param interval:
+        :return:
+        """
+        self._config.interval = interval
 
     def feed(self, task):
         """
@@ -52,7 +86,7 @@ class _SpiderThread(threading.Thread):
             return
 
         # set the stop flag to stop spider thread
-        self._stop = True
+        self._bstop = True
 
         # wait until the spider thread exit
         self.join()
@@ -65,8 +99,11 @@ class _SpiderThread(threading.Thread):
         # set the stopped flag first
         self._stopped = False
 
+        # prepare for running spider task
+        self.prepare()
+
         # process all urls waiting crawled
-        while not self._stop and len(self._tasks)>0:
+        while not self._bstop and len(self._tasks)>0:
             # get next task
             task = self._tasks.pop(0)
 
@@ -76,25 +113,15 @@ class _SpiderThread(threading.Thread):
             # process response
             self.process(resp)
 
+            # wait interval for next task
+            time.sleep(self._config.interval)
+
         self._stopped = True
 
 
-class Spider(_SpiderThread):
-    """
-        base class for spider
-    """
-    def prepare(self):
-        """
-            initialize the spider, relate with @destroy.
-        subclass need realize this method
-        :return:
-        """
-        pass
+class HttpSpider(Spider):
+    def __init__(self):
+        self._client = None
 
-    def process(self, resp):
-        """
-
-        :param resp:
-        :return:
-        """
+    def feed(self, url, *params, **kwargs):
         pass
