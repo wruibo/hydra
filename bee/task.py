@@ -1,35 +1,45 @@
 """
     task for spider
 """
+from . import net
 
 
 class Task:
-    def __init__(self):
+    def run(self):
+        """
+            run the task
+        :return:
+        """
         pass
+
+
+class HttpGetTask(Task):
+    def __init__(self, url, params=None, cookie=None):
+        """
+
+        :param url:
+        :param params:
+        """
+        self._request = rqst.HttpRequest("GET", url, params)
 
     def run(self):
+        """
+
+        :return:
+        """
+        r = net.http.client.get(self.url)
+
+
+class HttpPostTask(Task):
+    def __init__(self, url, params=None, cookie=None):
+        """
+
+        :param url:
+        :param params:
+        :param cookie:
+        """
         pass
 
-
-class HttpTask(Task):
-    def __init__(self, method, url, data, json, params=None, platform=None):
-        self._method = method
-
-        self._url = url
-        self._params = params
-
-        self._data = data
-        self._json = json
-
-        self._platform = platform
-
-
-class HttpGetTask(HttpTask):
-    def run(self):
-        pass
-
-
-class HttpPostTask(HttpTask):
     def run(self):
         pass
 

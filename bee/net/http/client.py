@@ -3,46 +3,51 @@
 """
 import requests as _requests
 
-
-class Core:
-    def __init__(self):
-        self._headers = {
-            "Accept":"text/html, application/xhtml+xml, application/xml; q=0.9, image/webp, */*; q=0.8",
-            "Accept-Encoding":"gzip, deflate"
-        }
-
-    def get(self, url, params=None, **kwargs):
-        return _requests.get(url, params, **kwargs)
-
-    def post(self, url, data=None, json=None, **kwargs):
-        return _requests.post(url, data, json, **kwargs)
+from . import model
+from . import vendor
 
 
-class Chrome(Core):
-    def __init__(self):
-        self._context = None
+class _Client:
+    def __init__(self, headers):
+        self._headers = headers
+
+    def get(self, url, params=None, headers=None):
+        r = _requests.get(url, params, headers=self._headers.merge(headers))
+        return model.response(r.status_code, r.reason, r.content)
+
+    def post(self, url, params=None, headers=None):
+        r = _requests.post(url, params, None, headers=self._headers.merge(headers))
+        return model.response(r.status_code, r.reason, r.content)
+
+
+class _Chrome:
+    @staticmethod
+    def default():
+        return _Client(vendor.chrome.pc.header())
 
     @staticmethod
     def mobile():
-        pass
+        return _Client(vendor.chrome.mobile.header())
 
-    @staticmethod
-    def default():
-        pass
+# chrome client
+chrome = _Chrome
 
-    def get(self, url, params=None, **kwargs):
-        return _requests.get(url, params, **kwargs)
-
-    def post(self, url, data=None, json=None, **kwargs):
-        return _requests.post(url, data, json, **kwargs)
+# global client
+_global_http_client = chrome.default()
 
 
+def use(client):
+    """
+        set the global http client
+    :param client:
+    :return:
+    """
+    _global_http_client = client
 
 
-def get(url, params=None, **kwargs):
-    return _requests.get(url, params, **kwargs)
+def get(url, params=None, headers=None):
+    return _global_http_client.get(url, params, headers)
 
 
-def post(url, data=None, json=None, **kwargs):
-    return _requests.post(url, data, json, **kwargs)
-
+def post(url, params=None, headers=None):
+    return _global_http_client.post(url, params, headers)

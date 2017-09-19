@@ -19,23 +19,8 @@ class QuotesSpider(scrapy.Spider):
             yield response.follow(next_page, self.parse)
 """
 
-import threading
-
-class T(threading.Thread):
-    def start(self):
-        threading.Thread.start(self)
-
-    def stop(self):
-        self.join()
-
-    def run(self):
-        print("hello")
+import bee
 
 if __name__ == "__main__":
-    #s = QuotesSpider()
-    #for a in s.start_requests():
-    #    b = s.handles_request(a)
-    #    s.parse(b)
-    t = T()
-    t.start()
-    t.stop()
+    resp = bee.net.http.client.get("http://www.baidu.com/")
+    print(resp.text)
