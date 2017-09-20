@@ -4,36 +4,40 @@
 import requests as _requests
 
 from . import model
-from . import vendor
 
 
 class _Client:
     def __init__(self, headers):
         self._headers = headers
 
-    def get(self, url, params=None, headers=None):
-        r = _requests.get(url, params, headers=self._headers.merge(headers))
-        return model.response(r.status_code, r.reason, r.content)
+    def request(self, method, url, **kwargs):
+        if kwargs.get("headers") is None:
+            kwargs["headers"] = self._headers
+        resp = _requests.request(method, url, **kwargs)
+        return model.response(resp)
 
-    def post(self, url, params=None, headers=None):
-        r = _requests.post(url, params, None, headers=self._headers.merge(headers))
-        return model.response(r.status_code, r.reason, r.content)
+    def get(self, url, params=None, **kwargs):
+        if kwargs.get("headers") is None:
+            kwargs["headers"] = self._headers
+        resp = _requests.get(url, params, **kwargs)
+        return model.response(resp)
+
+    def post(self, url, params=None, **kwargs):
+        if kwargs.get("headers") is None:
+            kwargs["headers"] = self._headers
+        resp = _requests.post(url, params, None, **kwargs)
+        return model.response(resp)
 
 
-class _Chrome:
-    @staticmethod
-    def default():
-        return _Client(vendor.chrome.pc.header())
-
-    @staticmethod
-    def mobile():
-        return _Client(vendor.chrome.mobile.header())
+class _ChromeClient:
+    pc = _Client(model.header.chrome.pc)
+    mobile = _Client(model.header.chrome.mobile)
 
 # chrome client
-chrome = _Chrome
+chrome = _ChromeClient
 
 # global client
-_global_http_client = chrome.default()
+_global_http_client = chrome.pc
 
 
 def use(client):
@@ -42,12 +46,19 @@ def use(client):
     :param client:
     :return:
     """
+    if not isinstance(client, _Client):
+        raise ValueError("input client must be an instance of _Client")
+    global _global_http_client
     _global_http_client = client
 
 
-def get(url, params=None, headers=None):
-    return _global_http_client.get(url, params, headers)
+def request(method, url, **kwargs):
+    return _global_http_client.request(method, url, **kwargs)
 
 
-def post(url, params=None, headers=None):
-    return _global_http_client.post(url, params, headers)
+def get(url, params=None, **kwargs):
+    return _global_http_client.get(url, params, **kwargs)
+
+
+def post(url, params=None, **kwargs):
+    return _global_http_client.post(url, params, **kwargs)

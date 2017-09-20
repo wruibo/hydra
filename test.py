@@ -22,5 +22,6 @@ class QuotesSpider(scrapy.Spider):
 import bee
 
 if __name__ == "__main__":
-    resp = bee.net.http.client.get("http://www.baidu.com/")
-    print(resp.text)
+
+    bee.net.http.get("http://www.baidu.com/")
+

@@ -120,8 +120,4 @@ class Spider(threading.Thread):
 
 
 class HttpSpider(Spider):
-    def __init__(self):
-        self._client = None
-
-    def feed(self, url, *params, **kwargs):
-        pass
+    pass

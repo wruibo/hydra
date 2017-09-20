@@ -1,7 +1,7 @@
-import bee
+import bee, pandas, io
 
 
-class ListSpider(bee.HttpSpider):
+class ListSpider(bee.Spider):
     """
         get the stock list
     """
@@ -12,15 +12,12 @@ class ListSpider(bee.HttpSpider):
         """
         url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=1"
 
-        headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            "Accept-Encoding": "gzip, deflate",
-            "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36",
-            "Host": "www.sse.com.cn",
-            "Referer": "http://www.sse.com.cn/",
-        }
+        host = "query.sse.com.cn"
+        referer = "http://www.sse.com.cn/assortment/stock/list/share/"
 
-        self.feed(bee.job.http.get(url, None, headers=headers))
+        headers = bee.net.http.header.default.pc.host(host).referer(referer)
+
+        self.feed(bee.task.http_get(url, None, headers=headers))
 
     def process(self, resp):
         """
@@ -28,8 +25,8 @@ class ListSpider(bee.HttpSpider):
         :param resp:
         :return:
         """
-        print(resp)
-        print(resp.text)
+        stocks = pandas.read_csv(io.StringIO(resp.text), sep="\s+")
+        print(stocks)
 
 
 if __name__ == "__main__":
@@ -38,4 +35,3 @@ if __name__ == "__main__":
     s.start()
 
     s.stop()
-

@@ -1,3 +1,2 @@
-from .spider import Spider
-
-from . import net
+from . import net, util, task
+from .spider import Spider, HttpSpider

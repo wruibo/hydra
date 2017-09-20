@@ -4,7 +4,7 @@
 from . import net
 
 
-class Task:
+class _Task:
     def run(self):
         """
             run the task
@@ -13,33 +13,44 @@ class Task:
         pass
 
 
-class HttpGetTask(Task):
-    def __init__(self, url, params=None, cookie=None):
-        """
+class _HttpTask(_Task):
+    def __init__(self, url, params=None, **kwargs):
+        self._url = url
+        self._params = params
+        self._kwargs = kwargs
 
-        :param url:
-        :param params:
-        """
-        self._request = rqst.HttpRequest("GET", url, params)
+    @property
+    def url(self):
+        return self._url
 
-    def run(self):
-        """
+    @property
+    def params(self):
+        return self._params
 
-        :return:
-        """
-        r = net.http.client.get(self.url)
+    @property
+    def kwargs(self):
+        return self._kwargs
 
 
-class HttpPostTask(Task):
-    def __init__(self, url, params=None, cookie=None):
-        """
-
-        :param url:
-        :param params:
-        :param cookie:
-        """
-        pass
+class _HttpGetTask(_HttpTask):
+    def __init__(self, url, params=None, **kwargs):
+        super(_HttpGetTask, self).__init__(url, params, **kwargs)
 
     def run(self):
-        pass
+        return net.http.client.get(self.url, self.params, **self.kwargs)
 
+
+class _HttpPostTask(_HttpTask):
+    def __init__(self, url, params=None, **kwargs):
+        super(_HttpPostTask, self).__init__(url, params, **kwargs)
+
+    def run(self):
+        return net.http.client.post(self.url, self.params, **self.kwargs)
+
+
+def http_get(url, params, **kwargs):
+    return _HttpGetTask(url, params, **kwargs)
+
+
+def http_post(url, params, **kwargs):
+    return _HttpPostTask(url, params, **kwargs)

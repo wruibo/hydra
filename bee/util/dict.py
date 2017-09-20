@@ -1,50 +1,63 @@
 """
     case insensitive dict
 """
+import collections
 
 
-class CaseInsensitiveDict(dict):
-    def __init__(self, seq={}, **kwargs):
-        super(CaseInsensitiveDict, self).__init__(seq, **kwargs)
+class CaseInsensitiveDict(collections.MutableMapping):
+    def __init__(self, data=None, **kwargs):
+        self._store = collections.OrderedDict()
+        if data is None:
+            data = {}
+        self.update(data, **kwargs)
 
     def __setitem__(self, key, value):
-        super(CaseInsensitiveDict, self).__setitem__(self._lower_key(key), (key, value))
+        # Use the lowercased key for lookups, but store the actual
+        # key alongside the value.
+        self._store[key.lower()] = (key, value)
 
     def __getitem__(self, key):
-        return super(CaseInsensitiveDict, self).__getitem__(self._lower_key(key))[1]
+        return self._store[key.lower()][1]
 
     def __delitem__(self, key):
-        del self[self._lower_key(key)]
+        del self._store[key.lower()]
 
     def __iter__(self):
-        return self.keys()
+        return (casedkey for casedkey, mappedvalue in self._store.values())
+
+    def __len__(self):
+        return len(self._store)
 
     def __eq__(self, other):
-        if not isinstance(other, CaseInsensitiveDict):
+        if isinstance(other, collections.Mapping):
             other = CaseInsensitiveDict(other)
+        else:
+            return NotImplemented
+        # Compare insensitively
         return dict(self.lower_items()) == dict(other.lower_items())
 
-    def keys(self):
-        return (key for key, value in super(CaseInsensitiveDict, self).values())
+    def __repr__(self):
+        return str(dict(self.items()))
 
-    def values(self):
-        return (value for key, value in super(CaseInsensitiveDict, self).values())
-
-    def items(self):
-        return ((key, value) for key, value in super(CaseInsensitiveDict, self).values())
+    def copy(self):
+        return CaseInsensitiveDict(self._store.values())
 
     def lower_items(self):
-        return ((self._lower_key(key), value) for key, value in super(CaseInsensitiveDict, self).values())
-
-    def _lower_key(self, key):
-        if isinstance(key, str):
-            return key.lower()
-        return key
+        """Like iteritems(), but with all lowercase keys."""
+        return (
+            (lowerkey, keyval[1])
+            for (lowerkey, keyval)
+            in self._store.items()
+        )
 
 
 if __name__ == "__main__":
+    x = {"a":2, "b":3}
+    e = CaseInsensitiveDict(**x)
+    print(e)
+
     a = CaseInsensitiveDict()
-    a["ABC"] = "Abc"
+    a["ABC"] = "Abcd"
     a["aBD"] = "Abc"
     a["eFg"] = "eFG"
 
@@ -63,11 +76,5 @@ if __name__ == "__main__":
     else:
         print("a != b")
 
-    print(a)
-    print(a.keys())
-    for key in a.keys():
-        print(key)
-    print(a.values())
-    for val in a.values():
-        print(val)
-    print(a.items())
+    for v in b.items():
+        print(v)
