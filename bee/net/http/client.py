@@ -30,8 +30,8 @@ class _Client:
 
 
 class _ChromeClient:
-    pc = _Client(model.header.chrome.pc)
-    mobile = _Client(model.header.chrome.mobile)
+    pc = _Client(model.header.chrome_pc)
+    mobile = _Client(model.header.chrome_mobile)
 
 # chrome client
 chrome = _ChromeClient

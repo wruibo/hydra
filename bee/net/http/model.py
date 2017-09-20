@@ -17,8 +17,15 @@ class _Header(util.dict.CaseInsensitiveDict):
         super(_Header, self).__init__(seq, **kwargs)
 
     @staticmethod
+    def empty():
+        return _Header()
+
+    @staticmethod
     def default():
         return _Header(_default_header)
+
+    def is_empty(self):
+        return len(self) == 0
 
     def agent(self, agent):
         if agent is None:
@@ -117,16 +124,14 @@ class _Response:
         return self._resp.json()
 
 
-class _ChromeHeader:
-    pc = _Header.default().agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36")
-    mobile = _Header.default().agent("Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36")
-
-
 class _HeaderVendor:
-    # vendor of default client
-    default = _ChromeHeader
-    # vendor of chrome client
-    chrome = _ChromeHeader
+    empty = _Header.empty()
+
+    default_pc = _Header.default().agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36")
+    default_mobile = _Header.default().agent("Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36")
+
+    chrome_pc = _Header.default().agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36")
+    chrome_mobile = _Header.default().agent("Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36")
 
 header =_HeaderVendor
 request = _Request

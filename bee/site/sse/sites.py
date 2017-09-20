@@ -1,42 +1,34 @@
 """
     sites of sse
 """
+from bee import net
 
-class _Protocol:
-    http = "http"
-    ftp = "ftp"
+uri_stock_list_listed_a = net.uri.httpuri(
+    url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=1",
+    host = "query.sse.com.cn",
+    referer="http://www.sse.com.cn/assortment/stock/list/share/"
+)
 
-class _Domain:
-    www = "www.sse.com.cn"
-    query = "query.sse.com.cn"
+uri_stock_list_listed_b = net.uri.httpuri(
+    url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=2",
+    host = "query.sse.com.cn",
+    referer="http://www.sse.com.cn/assortment/stock/list/share/"
+)
 
-class _Path:
+uri_stock_list_waiting = net.uri.httpuri(
+    url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=3",
+    host = "query.sse.com.cn",
+    referer="http://www.sse.com.cn/assortment/stock/list/firstissue/"
+)
 
+uri_stock_list_paused = net.uri.httpuri(
+    url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=4",
+    host = "query.sse.com.cn",
+    referer="http://www.sse.com.cn/assortment/stock/list/delisting/"
+)
 
-class _URI:
-    def __init__(self, proto, host, path, params):
-        self._proto = proto
-        self._host = host
-        self._path = path
-        self._params = params
-
-
-sse = {
-    "http":{
-        "www":{
-            "www.sse.com.cn",
-        }
-        "query":""
-    }
-}
-
-proto = _Protocol
-domain = _Domain
-uri = _URI
-
-
-uri_stock_list = uri(
-    proto.http,
-    domain.query,
-    path.stock
+uri_stock_list_terminated = net.uri.httpuri(
+    url = "http://query.sse.com.cn/security/stock/downloadStockListFile.do?csrcCode=&stockCode=&areaName=&stockType=5",
+    host = "query.sse.com.cn",
+    referer="http://www.sse.com.cn/assortment/stock/list/delisting/"
 )

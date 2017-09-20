@@ -2,4 +2,4 @@
     network protocol
 """
 
-from . import http
+from . import uri, http
