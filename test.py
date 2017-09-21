@@ -19,9 +19,7 @@ class QuotesSpider(scrapy.Spider):
             yield response.follow(next_page, self.parse)
 """
 
-import bee
+import bee, re, pandas
 
 if __name__ == "__main__":
-
-    bee.net.http.get("http://www.baidu.com/")
-
+    print(bee.site.sina.stock.get_stock_count())

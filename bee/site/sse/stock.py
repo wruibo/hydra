@@ -1,56 +1,73 @@
 """
     stock relate data from sse
 """
-import io, sites, pandas
+import re, io, pandas
+from . import sites
 
 
-def get_stock_list_listed_a():
+########### stock list #############
+def get_stocks():
     """
-        get stock list of shanghai stock exchange
+
     :return:
     """
-    resp = sites.uri_stock_list_listed_a.get()
+    resp = sites.uri_stocks.get()
+
+    regex_bonds = re.compile(r'val:\"(?P<code>\d+)\",val2:\"(?P<name>\w+)\",val3:\"(?P<spell>\w+)\"')
+    bonds = regex_bonds.findall(resp.text)
+
+    return pandas.DataFrame(bonds, columns=("股票代码", "股票名称", "名称简写"))
+
+
+def get_stocks_listed_a():
+    """
+        get A stock list of shanghai stock exchange
+    :return:
+    """
+    resp = sites.uri_stocks_listed_a.get()
     return pandas.read_csv(io.StringIO(resp.text), sep="\s+")
 
 
-def get_stock_list_listed_b():
+def get_stocks_listed_b():
     """
-        get stock list of shanghai stock exchange
+        get B stock list of shanghai stock exchange
     :return:
     """
-    resp = sites.uri_stock_list_listed_b.get()
+    resp = sites.uri_stocks_listed_b.get()
     return pandas.read_csv(io.StringIO(resp.text), sep="\s+")
 
 
-def get_stock_list_waiting():
+def get_stocks_waiting():
     """
-        get ipo stock list of shanghai stock exchange
+        get stock list waiting for ipo of shanghai stock exchange
     :return:
     """
-    resp = sites.uri_stock_list_waiting.get()
+    resp = sites.uri_stocks_waiting.get()
     return pandas.read_csv(io.StringIO(resp.text), sep="\s+")
 
 
-def get_stock_list_paused():
+def get_stocks_paused():
     """
-        get ipo stock list of shanghai stock exchange
+        get stock list paused of shanghai stock exchange
     :return:
     """
-    resp = sites.uri_stock_list_paused.get()
+    resp = sites.uri_stocks_paused.get()
     return pandas.read_csv(io.StringIO(resp.text), sep="\s+")
 
 
-def get_stock_list_terminated():
+def get_stocks_terminated():
     """
-        get ipo stock list of shanghai stock exchange
+        get stock list terminated of shanghai stock exchange
     :return:
     """
-    resp = sites.uri_stock_list_terminated.get()
+    resp = sites.uri_stocks_terminated.get()
     return pandas.read_csv(io.StringIO(resp.text), sep="\s+")
 
-if __name__ == "__main__":
-    print(get_stock_list_listed_a())
-    print(get_stock_list_listed_b())
-    print(get_stock_list_waiting())
-    print(get_stock_list_paused())
-    print(get_stock_list_terminated())
+
+########### stock detail #############
+def get_stock_detail(code):
+    """
+        get stock de
+    :param code:
+    :return:
+    """
