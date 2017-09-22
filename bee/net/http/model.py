@@ -1,73 +1,62 @@
 """
     model for http
 """
+import collections
 from bee import util
 
-
-_default_header = {
-    "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-    "Accept-Encoding": "gzip, deflate",
-    "Connection": "keep-alive"
-}
+hkey = collections.namedtuple('hkey',['agent', 'accept', 'encoding', 'connection', 'host', 'referer', 'cookie']) \
+                             ('User-Agent', 'Accept', 'Accept-Encoding', 'Connection', 'Host', 'Referer', 'Cookie')
 
 
 class _Header(util.dict.CaseInsensitiveDict):
-    def __init__(self, seq={}, **kwargs):
-        super(_Header, self).__init__(seq, **kwargs)
 
-    @staticmethod
-    def empty():
-        return _Header()
-
-    @staticmethod
-    def default():
-        return _Header(_default_header)
-
-    def is_empty(self):
-        return len(self) == 0
+    def __init__(self):
+        super(_Header, self).__init__(
+            {
+                hkey.agent: "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Mobile Safari/537.36",
+                hkey.accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                hkey.encoding: "gzip, deflate",
+                hkey.connection: "keep-alive"
+            }
+        )
 
     def agent(self, agent):
         if agent is None:
-            return self.get("User-Agent")
+            return self.get(hkey.agent)
         else:
-            self["User-Agent"] = agent
+            self[hkey.agent] = agent
         return self
 
     def accept(self, accept):
         if accept is None:
-            return self.get("Accept", None)
+            return self.get(hkey.accept, None)
         else:
-            self["Accept"] = accept
+            self[hkey.accept] = accept
         return self
 
     def cookie(self, cookie):
         if cookie is None:
-            return self.get("Cookie", None)
+            return self.get(hkey.cookie, None)
         else:
-            self["Cookie"] = cookie
+            self[hkey.cookie] = cookie
         return self
 
     def host(self, host):
         if host is None:
-            return self.get("Host")
+            return self.get(hkey.host)
         else:
-            self["Host"] = host
+            self[hkey.host] = host
         return self
 
     def referer(self, referer):
         if referer is None:
-            return self.get("Referer")
+            return self.get(hkey.referer)
         else:
-            self["Referer"] = referer
+            self[hkey.referer] = referer
         return self
 
-    def merge(self, seq=None, **kwargs):
-        if seq is None:
-            seq = {}
-
+    def merge(self, seq={}, **kwargs):
         self.update(seq, **kwargs)
-
         return self
 
 

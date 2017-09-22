@@ -1,2 +1,2 @@
-from .client import get, post, request
+from .client import get, post
 from .model import header, request, response

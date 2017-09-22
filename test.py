@@ -22,4 +22,4 @@ class QuotesSpider(scrapy.Spider):
 import bee, re, pandas
 
 if __name__ == "__main__":
-    print(bee.site.sina.stock.get_stock_count())
+    print(bee.site.sse.stock.get_stocks_listed_a())
