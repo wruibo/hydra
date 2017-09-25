@@ -1,7 +1,7 @@
 """
     uri
 """
-import urllib
+import urllib.parse
 
 from . import http
 
@@ -24,6 +24,9 @@ class _HttpUri:
     @property
     def headers(self):
         return self._headers
+
+    def join(self, url):
+        return _HttpUri(urllib.parse.urljoin(self._url, url))
 
     def get(self, **kwargs):
         url_format_values, params_format_values = kwargs.get('url'), kwargs.get('params')

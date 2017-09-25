@@ -1,7 +1,7 @@
 """
     get stock data
 """
-import re
+import re, pandas
 from . import sites
 
 
@@ -109,7 +109,7 @@ def get_china_stocks_quote_current(type="hs_a", interval=sites.interval):
         time.sleep(interval)
 
     # quotes result
-    return quotes
+    return pandas.DataFrame(quotes, columns=quotes_key)
 
 
 def get_hongkong_stocks_count(type="qbgg_hk"):
@@ -151,11 +151,11 @@ def get_hongkong_stocks_quote_current(type="qbgg_hk", interval=sites.interval):
     total_page = math.ceil(total_record/record_per_page)
 
     # get data of each page
-    record_key = ['code', 'name', 'lasttrade', 'pricechange', 'changepercent', 'buy', 'sell', 'prevclose', 'open', 'high', 'low', 'volume', 'amount', 'turnoverratio', 'eps', 'stocks_sum', 'ticktime']
-    quotes_key = ["证券代码", "证券名称", "当前价", "涨跌额", "涨跌幅", "买入价", "卖出价", "收盘价", "开盘价", "最高价", "最低价", "成交量", "成交额", "换手率", "每股盈利", "总股本", "当前时间"]
+    record_key = ['symbol', 'name', 'lasttrade', 'pricechange', 'changepercent', 'buy', 'sell', 'prevclose', 'open', 'high', 'low', 'volume', 'amount', 'eps', 'dividend', 'stocks_sum', 'ticktime']
+    quotes_key = ["证券代码", "证券名称", "当前价", "涨跌额", "涨跌幅", "买入价", "卖出价", "收盘价", "开盘价", "最高价", "最低价", "成交量", "成交额", "每股盈利", "股息", "总股本", "当前时间"]
     quotes = [quotes_key]
     for page in range(1, total_page+1):
-        resp = sites.uri_china_stocks_quote_current.get(url=(record_per_page, page, type))
+        resp = sites.uri_hongkong_stocks_quote_current.get(url=(record_per_page, page, type))
         records = bee.util.jsexpr.parse(resp.text)
         for record in records:
             quote = [record[key] for key in record_key]
@@ -164,4 +164,4 @@ def get_hongkong_stocks_quote_current(type="qbgg_hk", interval=sites.interval):
         time.sleep(interval)
 
     # quotes result
-    return quotes
+    return pandas.DataFrame(quotes, columns=quotes_key)
