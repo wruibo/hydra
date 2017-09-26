@@ -22,6 +22,5 @@ class QuotesSpider(scrapy.Spider):
 import bee, re, pandas
 
 if __name__ == "__main__":
-    result = bee.site.other.broker.get_sercurities_broker_servers(0.5)
-    for s in result:
-        print(s)
+    result = bee.site.other.broker.get_securities_broker_departments(0.1)
+    print(result)
