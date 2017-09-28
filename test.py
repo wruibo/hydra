@@ -22,5 +22,5 @@ class QuotesSpider(scrapy.Spider):
 import bee, re, pandas
 
 if __name__ == "__main__":
-    result = bee.site.other.broker.get_securities_broker_departments(0.1)
+    result = bee.site.sina.fund.get_china_funds_quote_etf()
     print(result)
