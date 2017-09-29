@@ -4,13 +4,13 @@
 from . import sites
 
 
-_china_open_fund_nav = sites.ApiNode("getFundNetCount", "getFundNetData", "open_fund")
-_china_money_fund_nav = sites.ApiNode("getFundNetCount", "getFundNetData", "money_fund")
-_china_etf_fund_nav = sites.ApiNode("getFundNetCount", "getFundNetData", "etf_jz_fund")
+_china_open_fund_nav = sites.MarketCenterApiNode("getFundNetCount", "getFundNetData", "open_fund")
+_china_money_fund_nav = sites.MarketCenterApiNode("getFundNetCount", "getFundNetData", "money_fund")
+_china_etf_fund_nav = sites.MarketCenterApiNode("getFundNetCount", "getFundNetData", "etf_jz_fund")
 
-_china_close_fund_quote = sites.ApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "close_fund")
-_china_etf_fund_quote = sites.ApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "etf_hq_fund")
-_china_lof_fund_quote = sites.ApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "lof_hq_fund")
+_china_close_fund_quote = sites.MarketCenterApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "close_fund")
+_china_etf_fund_quote = sites.MarketCenterApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "etf_hq_fund")
+_china_lof_fund_quote = sites.MarketCenterApiNode("getHQNodeStockCountSimple", "getHQNodeDataSimple", "lof_hq_fund")
 
 
 def get_china_funds_count_open():

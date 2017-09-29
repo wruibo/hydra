@@ -1,10 +1,15 @@
 """
     sites of sina
 """
-import re, collections
+import io, re, pandas, collections
 from bee import net
 
 
+#####################    configure of sites        ########################
+default_interval = 0.5 # default interval for access next page for data
+
+
+#####################    sites of market center    ########################
 uri_market_center_count = net.uri.httpuri(
     url="http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.%s?node=%s"
 )
@@ -15,7 +20,7 @@ uri_market_center_data = net.uri.httpuri(
 )
 
 
-ApiNode = collections.namedtuple("ApiNode", ("count", "data", "node"))
+MarketCenterApiNode = collections.namedtuple("ApiNode", ("count", "data", "node"))
 
 
 def get_market_center_count(api_node):
@@ -32,9 +37,6 @@ def get_market_center_count(api_node):
     count = int(result.group(1))
 
     return count
-
-
-default_interval = 0.5 # default interval for access next page for data
 
 
 def get_market_center_data(api_node, interval=default_interval):
@@ -66,45 +68,24 @@ def get_market_center_data(api_node, interval=default_interval):
         time.sleep(interval)
 
     # quotes result
-    return data
+    return pandas.DataFrame(data[1:], columns=data[0])
 
 
-### china bond data uri ###
-uri_china_bonds_count = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeStockCount?node=%s"
+#####################    sites of finance    ########################
+uri_financial_reports = net.uri.httpuri(
+    url="http://money.finance.sina.com.cn/corp/go.php/%s/displaytype/4/stockid/%s/ctrl/all.phtml"
 )
 
 
-uri_china_bonds_quote_current = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?sort=symbol&asc=1&symbol=&_s_r_a=page&num=%d&page=%d&node=%s#"
-)
+def get_financial_report(type, code):
+    """
+        get financial report sheet by specified <type> and stock <code>
+    :param type: str, "vDOWN_ProfitStatement", "vDOWN_BalanceSheet", "vDOWN_CashFlow"
+    :param code: str, stock code
+    :return: array
+    """
+    resp = uri_financial_reports.get(url=(type, code))
+    return pandas.read_csv(io.StringIO(resp.text), sep="\s+", index_col=0).transpose()
 
-### china fund data uri ###
-uri_china_funds_count = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getNameCount?node=%s"
-)
+df = pandas.DataFrame()
 
-
-uri_china_funds_nav = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getFundNetData?sort=symbol&asc=1&symbol=&_s_r_a=page&num=%d&page=%d&node=%s#"
-)
-
-
-### china stock data uri ###
-uri_china_stocks_count = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeStockCount?node=%s"
-)
-
-
-uri_china_stocks_quote_current = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?sort=symbol&asc=1&symbol=&_s_r_a=page&num=%d&page=%d&node=%s#"
-)
-
-### hongkong stock data uri ###
-uri_hongkong_stocks_count = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHKStockCount?node=%s"
-)
-
-uri_hongkong_stocks_quote_current = net.uri.httpuri(
-    url = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHKStockData?sort=symbol&asc=1&symbol=&_s_r_a=page&num=%d&page=%d&node=%s#"
-)

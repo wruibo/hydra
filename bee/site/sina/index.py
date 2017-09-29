@@ -1,8 +1,8 @@
 from . import sites
 
 
-_china_all_index = sites.ApiNode("getHQNodeStockCount", "getHQNodeData", "hs_s")
-_hongkong_hengsheng_index = sites.ApiNode("getNameCount", "getNameList", "zs_hk")
+_china_all_index = sites.MarketCenterApiNode("getHQNodeStockCount", "getHQNodeData", "hs_s")
+_hongkong_hengsheng_index = sites.MarketCenterApiNode("getNameCount", "getNameList", "zs_hk")
 
 
 def get_china_index_count_all():

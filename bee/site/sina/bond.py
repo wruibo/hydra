@@ -4,10 +4,10 @@
 from . import sites
 
 
-_china_hushen_bond = sites.ApiNode("getHQNodeStockCount", "getHQNodeData", "hs_z")
-_china_shanghai_bond = sites.ApiNode("getHQNodeStockCount", "getHQNodeData", "sh_z")
-_china_shenzhen_bond = sites.ApiNode("getHQNodeStockCount", "getHQNodeData", "sz_z")
-_china_hushen_cbond = sites.ApiNode("getHQNodeStockCount", "getHQNodeData", "hskzz_z")
+_china_hushen_bond = sites.MarketCenterApiNode("getHQNodeStockCount", "getHQNodeData", "hs_z")
+_china_shanghai_bond = sites.MarketCenterApiNode("getHQNodeStockCount", "getHQNodeData", "sh_z")
+_china_shenzhen_bond = sites.MarketCenterApiNode("getHQNodeStockCount", "getHQNodeData", "sz_z")
+_china_hushen_cbond = sites.MarketCenterApiNode("getHQNodeStockCount", "getHQNodeData", "hskzz_z")
 
 
 def get_china_bonds_count_hushen():
