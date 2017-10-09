@@ -1,7 +1,7 @@
 """
     sites of sina
 """
-import io, re, pandas, collections
+import io, re, csv, pandas, collections
 from bee import net
 
 
@@ -85,7 +85,5 @@ def get_financial_report(type, code):
     :return: array
     """
     resp = uri_financial_reports.get(url=(type, code))
-    return pandas.read_csv(io.StringIO(resp.text), sep="\s+", index_col=0).transpose()
-
-df = pandas.DataFrame()
-
+    df = pandas.read_csv(io.StringIO(resp.text), sep="\s+", header=None).transpose()
+    return pandas.DataFrame(df.values[1:], columns=df.values[0])
