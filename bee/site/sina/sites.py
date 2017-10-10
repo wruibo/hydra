@@ -73,7 +73,7 @@ def get_market_center_data(api_node, interval=default_interval):
 
 #####################    sites of finance    ########################
 uri_financial_reports = net.uri.httpuri(
-    url="http://money.finance.sina.com.cn/corp/go.php/%s/displaytype/4/stockid/%s/ctrl/all.phtml"
+    url = "http://money.finance.sina.com.cn/corp/go.php/%s/displaytype/4/stockid/%s/ctrl/all.phtml"
 )
 
 
@@ -87,3 +87,10 @@ def get_financial_report(type, code):
     resp = uri_financial_reports.get(url=(type, code))
     df = pandas.read_csv(io.StringIO(resp.text), sep="\s+", header=None).transpose()
     return pandas.DataFrame(df.values[1:], columns=df.values[0])
+
+
+#####################    sites of finance    ########################
+uri_trading_details = net.uri.httpuri(
+    url = "http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=sh600006"
+)
+

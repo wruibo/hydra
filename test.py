@@ -24,3 +24,5 @@ import bee, re, pandas
 if __name__ == "__main__":
     result = bee.site.sina.stock.get_china_stock_profit_sheet("000725")
     print(result)
+    import time,     sys
+

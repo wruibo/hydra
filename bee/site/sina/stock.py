@@ -92,4 +92,6 @@ def get_china_stock_profit_sheet(code):
     return sites.get_financial_report("vDOWN_ProfitStatement", code)
 
 
-
+#####################   stock trading data #######################
+def get_china_stock_trading_detail(code):
+    pass
