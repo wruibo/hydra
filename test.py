@@ -19,10 +19,12 @@ class QuotesSpider(scrapy.Spider):
             yield response.follow(next_page, self.parse)
 """
 
-import bee, re, pandas
+import bee
 
 if __name__ == "__main__":
-    result = bee.site.sina.stock.get_china_stock_profit_sheet("000725")
-    print(result)
-    import time,     sys
+  bee.site.lu.p2p.open_transfer_p2p_invest_page()
 
+  from selenium import webdriver
+
+  browser = webdriver.Chrome("/Users/polly/Downloads/chromedriver", port=9515)
+  page = browser.get("http:/www.baidu.com/")
